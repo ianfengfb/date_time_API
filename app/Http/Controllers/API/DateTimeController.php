@@ -42,7 +42,7 @@ class DateTimeAPIController extends Controller
             
             return response()->json([
                 'status' => 200,
-                'diff' => $day_diff
+                'day_diff' => $day_diff
             ]);
         }
     }
@@ -62,15 +62,26 @@ class DateTimeAPIController extends Controller
             'second_date'=>'required'
         ]);
 
-        $startDateTime = new DateTime("2023-03-20");
-        $endDateTime = new DateTime("2023-03-05");
+        if($validator->fails())
+        {
+            return response()->json([
+                'status'=>400,
+                'errors'=>$validator->messages()
+            ]);
+        }
+        else
+        {   
+            $dateTime_1 = new DateTime($request->input('first_date'));
+            $dateTime_2 = new DateTime($request->input('second_date'));
 
-        $week_diff = floor($endDateTime->diff($startDateTime)->days/7);
+            $week_diff = floor($dateTime_2->diff($dateTime_1)->days/7);
 
-        return response()->json([
-            'status' => 200,
-            'diff' => $week_diff
-        ]);
+            
+            return response()->json([
+                'status' => 200,
+                'week_diff' => $week_diff
+            ]);
+        }
     }
 
     /**
@@ -81,23 +92,32 @@ class DateTimeAPIController extends Controller
      * By Ian
      * On 15 Mar 2023
      */
-    public function compareTimezones()
+    public function compareTimezones(Request $request)
     {
-        $timeZone1 = new DateTimeZone('America/Los_Angeles');
-        $timeZone1= new DateTime('now', $timeZone1);
-
-        $timeZone2 = new DateTimeZone('America/New_York');
-        $timeZone2= new DateTime('now', $timeZone2);
-
-        $timeZone1_offset = $timeZone1->getOffset() / 3600;
-        $timeZone2_offset = $timeZone2->getOffset() / 3600;
-        $hour_diff = abs($timeZone1_offset - $timeZone2_offset);
-
-        return response()->json([
-            'status' => 200,
-            'timeZone1'=>$timeZone1->format('h:i:s A'),
-            'timeZone2'=>$timeZone2->format('h:i:s A'),
-            'diff' => $hour_diff
+        $validator = Validator::make($request->all(), [
+            'first_timezone'=> 'required',
+            'second_timezone'=>'required'
         ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'status'=>400,
+                'errors'=>$validator->messages()
+            ]);
+        }
+        else
+        {   
+            $timeZone1 = new DateTime(gmdate('h:i:s A', strtotime('-3 hours')));
+            $timeZone2 = new DateTime(gmdate('h:i:s A', strtotime('-1 hour')));
+            $hour_diff = $timeZone1->diff($timeZone2)->h;
+
+            return response()->json([
+                'status' => 200,
+                'timeZone1'=>$timeZone1->format('h:i:s A'),
+                'timeZone2'=>$timeZone2->format('h:i:s A'),
+                'hour_diff' => $request->input('first_timezone')
+            ]);
+        }
     }
 }
