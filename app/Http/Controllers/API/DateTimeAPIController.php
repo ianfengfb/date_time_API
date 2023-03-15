@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Calculator\DateTimeCalculator;
 use Illuminate\Support\Facades\Validator;
 
 class DateTimeAPIController extends Controller
@@ -34,11 +35,7 @@ class DateTimeAPIController extends Controller
         }
         else
         {   
-            $dateTime_1 = new DateTime($request->input('first_date'));
-            $dateTime_2 = new DateTime($request->input('second_date'));
-
-            $day_diff = $dateTime_2->diff($dateTime_1)->d;
-
+            $day_diff = (new DateTimeCalculator())->days_diff_calculator($request->input('first_date'), $request->input('second_date'));
             
             return response()->json([
                 'status' => 200,
@@ -71,10 +68,8 @@ class DateTimeAPIController extends Controller
         }
         else
         {   
-            $dateTime_1 = new DateTime($request->input('first_date'));
-            $dateTime_2 = new DateTime($request->input('second_date'));
 
-            $week_diff = floor($dateTime_2->diff($dateTime_1)->days/7);
+            $week_diff = (new DateTimeCalculator())->weeks_diff_calculator($request->input('first_date'), $request->input('second_date'));
 
             
             return response()->json([
@@ -94,29 +89,27 @@ class DateTimeAPIController extends Controller
      */
     public function compareTimezones(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'first_timezone'=> 'required',
-            'second_timezone'=>'required'
-        ]);
+        $timeZone1_offset = $request->input('first_timezone');
+        $timeZone2_offset = $request->input('second_timezone');
 
-        if($validator->fails())
+        if($timeZone1_offset == '' || $timeZone2_offset == '')
         {
             return response()->json([
                 'status'=>400,
-                'errors'=>$validator->messages()
+                'errors'=>'Please select a timezone.'
             ]);
         }
         else
         {   
-            $timeZone1 = new DateTime(gmdate('h:i:s A', strtotime('-3 hours')));
-            $timeZone2 = new DateTime(gmdate('h:i:s A', strtotime('-1 hour')));
-            $hour_diff = $timeZone1->diff($timeZone2)->h;
+            $timeZone1 = new DateTime(gmdate('h:i:s A', strtotime($timeZone1_offset)));
+            $timeZone2 = new DateTime(gmdate('h:i:s A', strtotime($timeZone2_offset)));
+            $hour_diff = (new DateTimeCalculator())->timezone_compare_calculator($timeZone1, $timeZone2);
 
             return response()->json([
                 'status' => 200,
                 'timeZone1'=>$timeZone1->format('h:i:s A'),
                 'timeZone2'=>$timeZone2->format('h:i:s A'),
-                'hour_diff' => $request->input('first_timezone')
+                'hour_diff' => $hour_diff
             ]);
         }
     }
