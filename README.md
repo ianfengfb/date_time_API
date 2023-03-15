@@ -1,7 +1,5 @@
 # DateTime API Testing
 
-![Alt text](/public/img/clock.png "Clock")
-
 ## Setup
 
 ### Clone or download
