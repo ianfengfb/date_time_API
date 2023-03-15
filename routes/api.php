@@ -26,10 +26,10 @@ use App\Http\Controllers\Api\DateTimeAPIController;
 */
 
 // Find out the number of days between two DateTime parameters.
-Route::get('/numberOfDays', [DateTimeAPIController::class, 'numberOfDays']);
+Route::post('/numberOfDays', [DateTimeAPIController::class, 'numberOfDays']);
 
 // Find out the number of complete weeks between two DateTime parameters.
-Route::get('/numberOfWeeks', [DateTimeAPIController::class, 'numberOfWeeks']);
+Route::post('/numberOfWeeks', [DateTimeAPIController::class, 'numberOfWeeks']);
 
 //  Allow the specification of a timezone for comparison of input parameters from different timezones.
-Route::get('/compareTimezones', [DateTimeAPIController::class, 'compareTimezones']);
+Route::post('/compareTimezones', [DateTimeAPIController::class, 'compareTimezones']);
