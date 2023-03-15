@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+|--------------------------------------------------------------------------
+| Page Routes
+|--------------------------------------------------------------------------
+||
+| Add by Ian
+| On 15 Mar 2023
+|
+*/
+
+// Display the index page
+Route::get('/', [PageController::class, 'index']);
