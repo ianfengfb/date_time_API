@@ -1,6 +1,6 @@
 # DateTime API Testing
 
-![Alt text](/public/images/clock.png "Clock")
+![Alt text](/public/img/clock.png "Clock")
 
 ## Setup
 
