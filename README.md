@@ -18,7 +18,7 @@ php artisan serve
 ```
 open localhost:8000
 
-(I have created a visilized page to make it easy to call the 3 APIs)
+(I have created a visualized page to make it easy to call the 3 APIs)
 
 ## File structure
 ### API routes and controller
@@ -32,7 +32,7 @@ The views contain a layout file, main content index file and a timezone selector
 ### Unit test
 The phpUnit testing file is in /tests/Unit/CalculatorTest.php
 
-## Visilization Usage
+## Visualization Usage
 ### Days diff calculator
 Use date time picker to pick two dates and times, then click "Calculate" button, it will return a result as well as the actuall API JSON result.
 
